@@ -1,0 +1,152 @@
+{
+  "claim_id": "CLM-TEST-00001",
+  "status": "REVIEWED",
+  "submitted_at": "2026-02-21T10:30:00Z",
+  "updated_at": "2026-02-21T10:48:00Z",
+  "claimant": {
+    "policy_id": "POL-AUT-10001",
+    "name": "John Smith",
+    "contact_phone": "555-234-5678",
+    "contact_email": "john.smith@example.com"
+  },
+  "incident": {
+    "date": "2026-02-19",
+    "time": "14:30",
+    "location": "Intersection of Main St and Oak Ave, Columbus, OH",
+    "description": "I was traveling northbound on Main Street approaching the intersection with Oak Avenue at approximately 30 mph. The traffic signal was green in my direction. As I entered the intersection, a dark blue Ford Explorer driven by the other party ran the red light on Oak Avenue and struck the front-right corner of my vehicle. The impact pushed my Honda Accord sideways approximately 6 feet. My airbags did not deploy. I was able to pull over to the shoulder after the impact. The other driver admitted fault at the scene and stated they did not see the red light. A Columbus Police officer responded within 10 minutes and took statements from both drivers and one witness. The other driver's front bumper and hood were also damaged. My vehicle has significant front-end damage on the passenger side including a crumpled right fender, broken headlight assembly, damaged bumper cover, and the hood is slightly buckled on the right side. I estimate the damage extends into the wheel well area. The vehicle is still drivable but I am concerned about alignment issues. No injuries to either driver. No passengers were in either vehicle.",
+    "type": "collision",
+    "other_party": {
+      "name": "Maria Rodriguez",
+      "insurance_company": "State Farm",
+      "policy_number": "SF-98-7654321",
+      "contact": "555-876-5432"
+    },
+    "police_report_number": "CPD-2026-018742",
+    "photos": [],
+    "injuries_reported": false,
+    "witnesses": [
+      {
+        "name": "David Chen",
+        "contact": "555-345-9876",
+        "statement": "I was waiting at the crosswalk on the southeast corner of Main and Oak. The Honda had a green light and was going straight through the intersection. The Ford Explorer ran the red light and hit the Honda on the passenger side. The Explorer driver did not appear to brake before impact."
+      }
+    ]
+  },
+  "pipeline": {
+    "front_desk": {
+      "completed_at": "2026-02-21T10:31:00Z",
+      "agent_session": "agent:router:main",
+      "category": "standard collision",
+      "priority": "normal",
+      "cat_event": null,
+      "missing_info": []
+    },
+    "claims_officer": {
+      "completed_at": "2026-02-21T10:34:00Z",
+      "agent_session": "agent:claims-officer:main",
+      "covered": true,
+      "policy_status": "active",
+      "coverage_type": "collision",
+      "deductible_amount": 500,
+      "coverage_limit": null,
+      "exclusions_checked": [
+        "intentional_acts: not applicable",
+        "racing: not applicable",
+        "commercial_use: not applicable",
+        "excluded_drivers: not applicable",
+        "non_owned_vehicle: not applicable",
+        "mechanical_breakdown: not applicable",
+        "wear_and_tear: not applicable",
+        "nuclear_war_seizure: not applicable"
+      ],
+      "denial_reason": null,
+      "um_uim_route": "not_applicable"
+    },
+    "assessor": {
+      "completed_at": "2026-02-21T10:38:00Z",
+      "agent_session": "agent:assessor:main",
+      "repair_estimate_usd": 4500,
+      "total_loss": false,
+      "acv_usd": null,
+      "salvage_value_usd": null,
+      "parts_recommendation": "OEM",
+      "labor_hours": 18,
+      "rental_days": 7,
+      "pre_existing_damage_flags": [],
+      "hidden_damage_likely": true
+    },
+    "fraud_analyst": {
+      "completed_at": "2026-02-21T10:42:00Z",
+      "agent_session": "agent:fraud-analyst:main",
+      "risk_score": 8,
+      "risk_level": "low",
+      "flags": [],
+      "soft_fraud": false,
+      "recommendation": "CLEAR"
+    },
+    "senior_reviewer": {
+      "completed_at": "2026-02-21T10:48:00Z",
+      "agent_session": "agent:senior-reviewer:main",
+      "decision": "APPROVED",
+      "decision_reasoning": "All pipeline stages passed without concerns. Coverage verified (collision, $500 deductible, policy active). Damage estimate $4,500 is reasonable for described damage. Fraud risk low (8/100, CLEAR). FCSP timelines compliant. No escalation triggers. Approved for payment.",
+      "conditions": [],
+      "escalated_to_human": false,
+      "escalation_reason": null,
+      "fcsp_timeline_check": {
+        "acknowledgment_deadline": "2026-03-10",
+        "decision_deadline": "2026-04-02",
+        "payment_deadline": "2026-05-02",
+        "compliant": true
+      }
+    },
+    "finance": {
+      "completed_at": null,
+      "agent_session": null,
+      "payment_amount_usd": null,
+      "deductible_applied_usd": null,
+      "depreciation_applied_usd": null,
+      "subrogation_candidate": false,
+      "subrogation_target": null,
+      "payment_method": null,
+      "payment_reference": null,
+      "supplement_eligible": null
+    }
+  },
+  "audit_log": [
+    {
+      "timestamp": "2026-02-21T10:31:00Z",
+      "agent": "router",
+      "action": "claim_registered",
+      "reasoning": "FNOL received for collision claim. Claimant John Smith, policy POL-AUT-10001.",
+      "regulation_reference": null
+    },
+    {
+      "timestamp": "2026-02-21T10:34:00Z",
+      "agent": "claims-officer",
+      "action": "coverage_verified",
+      "reasoning": "Policy POL-AUT-10001 is active. Collision coverage with $500 deductible. All exclusions checked, none apply.",
+      "regulation_reference": "FCSP Act"
+    },
+    {
+      "timestamp": "2026-02-21T10:38:00Z",
+      "agent": "assessor",
+      "action": "estimate_completed",
+      "reasoning": "Estimated repair at $4,500. OEM parts for 2023 Honda Accord. Not total loss. Hidden damage likely.",
+      "regulation_reference": null
+    },
+    {
+      "timestamp": "2026-02-21T10:42:00Z",
+      "agent": "fraud-analyst",
+      "action": "fraud_analysis_complete",
+      "reasoning": "All 7 fraud patterns evaluated. No indicators. Risk 8/100, CLEAR.",
+      "regulation_reference": null
+    },
+    {
+      "timestamp": "2026-02-21T10:48:00Z",
+      "agent": "senior-reviewer",
+      "action": "decision_approved",
+      "reasoning": "Comprehensive review of all stages. Coverage confirmed, estimate reasonable, no fraud indicators, FCSP compliant. Approved for payment.",
+      "regulation_reference": "FCSP Act: decision within regulatory window"
+    }
+  ]
+}

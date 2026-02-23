@@ -1,0 +1,151 @@
+{
+  // ============================================================
+  // Ohio Mutual Auto Claims Processing - OpenClaw Configuration
+  // ============================================================
+  // 6 agents in a hub-and-spoke pipeline for insurance claims.
+  // Router orchestrates, 5 specialists process sequentially.
+  //
+  // Pipeline: Router → Claims Officer → Assessor → Fraud Analyst
+  //           → Senior Reviewer → Finance
+  //
+  // Channel: Telegram
+  // Communication: sessions_send (synchronous agent-to-agent RPC)
+  // State: PostgreSQL with JSONB
+  // ============================================================
+
+  agents: {
+    defaults: {
+      // System default model — the `default: true` agent uses this, not its per-agent model field
+      model: { primary: "openrouter/anthropic/claude-sonnet-4.6" },
+      // Block streaming: send text blocks as separate messages during the turn (not buffered to end)
+      blockStreamingDefault: "on",
+      blockStreamingBreak: "text_end",
+    },
+    list: [
+      {
+        id: "router",
+        name: "Claims Router",
+        default: true,
+        workspace: "~/.openclaw/workspace-router",
+        model: "openrouter/anthropic/claude-sonnet-4.6",
+        identity: { name: "OpenClaw Claims" },
+        tools: {
+          allow: ["read", "write", "exec", "sessions_send", "sessions_list", "session_status"],
+          deny: ["browser", "gateway", "cron", "sessions_spawn"],
+        },
+      },
+      {
+        id: "claims-officer",
+        name: "Claims Officer",
+        workspace: "~/.openclaw/workspace-claims-officer",
+        model: "openrouter/x-ai/grok-4.1-fast",
+        identity: { name: "Claims Officer" },
+        tools: {
+          allow: ["read", "write", "exec"],
+          deny: ["browser", "gateway", "cron", "sessions_send", "sessions_spawn"],
+        },
+      },
+      {
+        id: "assessor",
+        name: "Damage Assessor",
+        workspace: "~/.openclaw/workspace-assessor",
+        model: "openrouter/x-ai/grok-4.1-fast",
+        identity: { name: "Damage Assessor" },
+        tools: {
+          allow: ["read", "write", "exec"],
+          deny: ["browser", "gateway", "cron", "sessions_send", "sessions_spawn"],
+        },
+      },
+      {
+        id: "fraud-analyst",
+        name: "Fraud Analyst",
+        workspace: "~/.openclaw/workspace-fraud-analyst",
+        model: "openrouter/x-ai/grok-4.1-fast",
+        identity: { name: "Fraud Analyst" },
+        tools: {
+          allow: ["read", "write", "exec"],
+          deny: ["browser", "gateway", "cron", "sessions_send", "sessions_spawn"],
+        },
+      },
+      {
+        id: "senior-reviewer",
+        name: "Senior Reviewer",
+        workspace: "~/.openclaw/workspace-senior-reviewer",
+        model: "openrouter/x-ai/grok-4.1-fast",
+        identity: { name: "Senior Reviewer" },
+        tools: {
+          allow: ["read", "write", "exec"],
+          deny: ["browser", "gateway", "cron", "sessions_send", "sessions_spawn"],
+        },
+      },
+      {
+        id: "finance",
+        name: "Finance Agent",
+        workspace: "~/.openclaw/workspace-finance",
+        model: "openrouter/x-ai/grok-4.1-fast",
+        identity: { name: "Finance Agent" },
+        tools: {
+          allow: ["read", "write", "exec"],
+          deny: ["browser", "gateway", "cron", "sessions_send", "sessions_spawn"],
+        },
+      },
+    ],
+  },
+
+  // --- Routing ---
+  // All Telegram messages go to the Router.
+  // The Router is the ONLY agent that talks to the user.
+  bindings: [
+    { agentId: "router", match: { channel: "telegram" } },
+  ],
+
+  // --- Agent-to-Agent Communication ---
+  // sessions_send: Router dispatches work and waits for response.
+  // sessions.visibility: "all" lets agents see each other's sessions.
+  tools: {
+    agentToAgent: {
+      enabled: true,
+      allow: ["router", "claims-officer", "assessor", "fraud-analyst", "senior-reviewer", "finance"],
+    },
+    sessions: {
+      visibility: "all",
+    },
+  },
+
+  // --- Session Behavior ---
+  // maxPingPongTurns: 1 = Router sends, agent responds once. No back-and-forth.
+  session: {
+    agentToAgent: {
+      maxPingPongTurns: 1,
+    },
+  },
+
+  // --- Telegram Channel ---
+  // Create a bot via @BotFather, paste the token below.
+  channels: {
+    telegram: {
+      enabled: true,
+      botToken: "${TELEGRAM_BOT_TOKEN}",
+      dmPolicy: "allowlist",
+      allowFrom: ["YOUR_TELEGRAM_USER_ID"],
+      // "partial" = edits same message with streaming text (janky rewriting)
+      // "block"   = sends each completed text block as a separate new message (clean)
+      // "off"     = waits for full response, sends one message (long silence)
+      streamMode: "block",
+      // CRITICAL: blockStreaming is separate from streamMode!
+      // streamMode controls draft preview appearance
+      // blockStreaming controls whether text blocks are sent as separate messages DURING the turn
+      // Without this, all text is buffered and sent only when the turn ends (or lost on timeout)
+      blockStreaming: true,
+    },
+  },
+
+  // --- Gateway ---
+  gateway: {
+    mode: "local",
+  },
+
+  logging: {
+    level: "info",
+  },
+}

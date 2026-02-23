@@ -1,0 +1,73 @@
+{
+  "policy_id": "POL-AUT-10003",
+  "policyholder": {
+    "name": "Robert Wilson",
+    "contact_phone": "555-345-6789",
+    "contact_email": "robert.wilson@example.com",
+    "address": {
+      "street": "305 Elm Drive",
+      "city": "Cincinnati",
+      "state": "OH",
+      "zip": "45202"
+    }
+  },
+  "effective_date": "2025-09-15",
+  "expiration_date": "2026-09-15",
+  "status": "active",
+  "coverages": [
+    {
+      "type": "collision",
+      "limit": null,
+      "deductible": 500,
+      "per_person_limit": null,
+      "per_occurrence_limit": null
+    },
+    {
+      "type": "comprehensive",
+      "limit": null,
+      "deductible": 250,
+      "per_person_limit": null,
+      "per_occurrence_limit": null
+    },
+    {
+      "type": "liability",
+      "limit": null,
+      "deductible": 0,
+      "per_person_limit": 100000,
+      "per_occurrence_limit": 300000
+    },
+    {
+      "type": "um_uim",
+      "limit": null,
+      "deductible": 0,
+      "per_person_limit": 50000,
+      "per_occurrence_limit": 100000
+    }
+  ],
+  "excluded_drivers": [
+    {
+      "name": "Michael Johnson",
+      "reason": "Excluded due to poor driving record -- 3 at-fault accidents and 2 DUI convictions in the past 5 years"
+    }
+  ],
+  "vehicles": [
+    {
+      "year": 2024,
+      "make": "Ford",
+      "model": "F-150",
+      "vin": "1FTFW1E80NFA00789"
+    },
+    {
+      "year": 2021,
+      "make": "Chevrolet",
+      "model": "Equinox",
+      "vin": "2GNAXUEV0M6100234"
+    }
+  ],
+  "endorsements": [
+    {
+      "type": "roadside_assistance",
+      "description": "24/7 roadside assistance including towing up to 75 miles"
+    }
+  ]
+}

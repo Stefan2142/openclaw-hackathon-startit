@@ -1,0 +1,9 @@
+.DS_Store
+*.DS_Store
+_archive/
+.claude/
+node_modules/
+*.log
+/shared/reports/*.pdf
+/shared/uploads/*/
+.env

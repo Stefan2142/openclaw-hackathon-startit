@@ -1,0 +1,99 @@
+{
+  "claim_id": "CLM-TEST-NEEDINFO",
+  "status": "FNOL_RECEIVED",
+  "submitted_at": "2026-02-21T12:00:00Z",
+  "updated_at": "2026-02-21T12:01:00Z",
+  "claimant": {
+    "policy_id": "POL-FAKE-99999",
+    "name": "Jane Doe",
+    "contact_phone": "555-111-2222",
+    "contact_email": "jane.doe@example.com"
+  },
+  "incident": {
+    "date": "2026-02-20",
+    "time": "09:15",
+    "location": "Highway 71 near Exit 100, Columbus, OH",
+    "description": "I was driving on Highway 71 when a deer ran across the road and I swerved to avoid it, hitting the guardrail. My front bumper and left fender are damaged. No other vehicles involved.",
+    "type": "collision",
+    "other_party": null,
+    "police_report_number": null,
+    "photos": [],
+    "injuries_reported": false,
+    "witnesses": []
+  },
+  "pipeline": {
+    "front_desk": {
+      "completed_at": "2026-02-21T12:01:00Z",
+      "agent_session": "agent:router:main",
+      "category": "standard collision",
+      "priority": "normal",
+      "cat_event": null,
+      "missing_info": []
+    },
+    "claims_officer": {
+      "completed_at": null,
+      "agent_session": null,
+      "covered": null,
+      "policy_status": null,
+      "coverage_type": null,
+      "deductible_amount": null,
+      "coverage_limit": null,
+      "exclusions_checked": [],
+      "denial_reason": null,
+      "um_uim_route": null
+    },
+    "assessor": {
+      "completed_at": null,
+      "agent_session": null,
+      "repair_estimate_usd": null,
+      "total_loss": null,
+      "acv_usd": null,
+      "salvage_value_usd": null,
+      "parts_recommendation": null,
+      "labor_hours": null,
+      "rental_days": null,
+      "pre_existing_damage_flags": [],
+      "hidden_damage_likely": null
+    },
+    "fraud_analyst": {
+      "completed_at": null,
+      "agent_session": null,
+      "risk_score": null,
+      "risk_level": null,
+      "flags": [],
+      "soft_fraud": null,
+      "recommendation": null
+    },
+    "senior_reviewer": {
+      "completed_at": null,
+      "agent_session": null,
+      "decision": null,
+      "decision_reasoning": null,
+      "conditions": [],
+      "escalated_to_human": false,
+      "escalation_reason": null,
+      "fcsp_timeline_check": null
+    },
+    "finance": {
+      "completed_at": null,
+      "agent_session": null,
+      "payment_amount_usd": null,
+      "deductible_applied_usd": null,
+      "depreciation_applied_usd": null,
+      "subrogation_candidate": false,
+      "subrogation_target": null,
+      "payment_method": null,
+      "payment_reference": null,
+      "supplement_eligible": null
+    }
+  },
+  "audit_log": [
+    {
+      "timestamp": "2026-02-21T12:01:00Z",
+      "agent": "router",
+      "action": "claim_registered",
+      "reasoning": "FNOL received for collision claim. Claimant Jane Doe, policy POL-FAKE-99999. Incident on 2026-02-20 on Highway 71.",
+      "regulation_reference": null
+    }
+  ]
+}

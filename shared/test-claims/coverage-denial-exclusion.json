@@ -1,0 +1,96 @@
+{
+  "claim_id": "CLM-2026-00003",
+  "status": "FNOL_RECEIVED",
+  "submitted_at": "2026-02-21T11:30:00Z",
+  "updated_at": "2026-02-21T11:30:00Z",
+  "claimant": {
+    "policy_id": "POL-AUT-10003",
+    "name": "Robert Wilson",
+    "contact_phone": "555-345-6789",
+    "contact_email": "robert.wilson@example.com"
+  },
+  "incident": {
+    "date": "2026-02-20",
+    "time": "09:15",
+    "location": "Westbound I-275 near Exit 28, Cincinnati, OH",
+    "description": "I am filing this claim for damage to my 2024 Ford F-150. On the morning of February 20th, my nephew Michael Johnson was driving my truck to a job site in West Chester. I had asked him to pick up some building materials for a renovation project I am working on. Michael was traveling westbound on I-275 near the Colerain Avenue exit when traffic slowed suddenly ahead of him. He was unable to stop in time and rear-ended the vehicle ahead of him, a silver Chevrolet Tahoe. Michael told me the traffic went from highway speed to nearly stopped within a few car lengths due to a construction zone merge. The front of my truck has damage to the bumper, grille, and hood. The radiator may be compromised as Michael said there was fluid leaking after the collision. The other vehicle had rear bumper and tailgate damage. Michael exchanged information with the other driver at the scene. A highway patrol officer responded and filed a report. Michael was cited for following too closely. No injuries were reported by either party. I want to get my truck repaired as soon as possible because I need it for work.",
+    "type": "collision",
+    "other_party": {
+      "name": "Sandra Mitchell",
+      "insurance_company": "Nationwide",
+      "policy_number": "NW-OH-5567890",
+      "contact": "555-234-8765"
+    },
+    "police_report_number": "OSHP-2026-004521",
+    "photos": [],
+    "injuries_reported": false,
+    "witnesses": []
+  },
+  "pipeline": {
+    "front_desk": {
+      "completed_at": null,
+      "agent_session": null,
+      "category": null,
+      "priority": null,
+      "cat_event": null,
+      "missing_info": []
+    },
+    "claims_officer": {
+      "completed_at": null,
+      "agent_session": null,
+      "covered": null,
+      "policy_status": null,
+      "coverage_type": null,
+      "deductible_amount": null,
+      "coverage_limit": null,
+      "exclusions_checked": [],
+      "denial_reason": null,
+      "um_uim_route": null
+    },
+    "assessor": {
+      "completed_at": null,
+      "agent_session": null,
+      "repair_estimate_usd": null,
+      "total_loss": null,
+      "acv_usd": null,
+      "salvage_value_usd": null,
+      "parts_recommendation": null,
+      "labor_hours": null,
+      "rental_days": null,
+      "pre_existing_damage_flags": [],
+      "hidden_damage_likely": null
+    },
+    "fraud_analyst": {
+      "completed_at": null,
+      "agent_session": null,
+      "risk_score": null,
+      "risk_level": null,
+      "flags": [],
+      "soft_fraud": null,
+      "recommendation": null
+    },
+    "senior_reviewer": {
+      "completed_at": null,
+      "agent_session": null,
+      "decision": null,
+      "decision_reasoning": null,
+      "conditions": [],
+      "escalated_to_human": false,
+      "escalation_reason": null,
+      "fcsp_timeline_check": null
+    },
+    "finance": {
+      "completed_at": null,
+      "agent_session": null,
+      "payment_amount_usd": null,
+      "deductible_applied_usd": null,
+      "depreciation_applied_usd": null,
+      "subrogation_candidate": false,
+      "subrogation_target": null,
+      "payment_method": null,
+      "payment_reference": null,
+      "supplement_eligible": null
+    }
+  },
+  "audit_log": []
+}

@@ -1,0 +1,59 @@
+{
+  "policy_id": "POL-AUT-10005",
+  "policyholder": {
+    "name": "David Lee",
+    "contact_phone": "555-567-8901",
+    "contact_email": "david.lee@example.com",
+    "address": {
+      "street": "1500 Birch Lane",
+      "city": "Toledo",
+      "state": "OH",
+      "zip": "43604"
+    }
+  },
+  "effective_date": "2025-11-01",
+  "expiration_date": "2026-11-01",
+  "status": "active",
+  "coverages": [
+    {
+      "type": "comprehensive",
+      "limit": null,
+      "deductible": 500,
+      "per_person_limit": null,
+      "per_occurrence_limit": null
+    },
+    {
+      "type": "liability",
+      "limit": null,
+      "deductible": 0,
+      "per_person_limit": 100000,
+      "per_occurrence_limit": 300000
+    },
+    {
+      "type": "um_uim",
+      "limit": null,
+      "deductible": 0,
+      "per_person_limit": 100000,
+      "per_occurrence_limit": 300000
+    }
+  ],
+  "excluded_drivers": [],
+  "vehicles": [
+    {
+      "year": 2020,
+      "make": "Subaru",
+      "model": "Outback",
+      "vin": "4S4BTAPC0L3100890"
+    }
+  ],
+  "endorsements": [
+    {
+      "type": "rental_reimbursement",
+      "description": "Rental car coverage up to $30/day for 14 days while vehicle is being repaired"
+    },
+    {
+      "type": "gap_coverage",
+      "description": "GAP coverage pays difference between ACV and outstanding loan balance if vehicle is totaled"
+    }
+  ]
+}

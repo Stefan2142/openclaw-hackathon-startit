@@ -1,0 +1,515 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ohio-mutual.example.com/schemas/claim.schema.json",
+  "title": "Ohio Mutual Auto Claim",
+  "description": "Complete claim state schema for multi-agent insurance claims processing pipeline. This schema is the contract between all 7 agents -- every field name here is exactly what agents read and write.",
+  "type": "object",
+  "required": ["claim_id", "status", "submitted_at", "updated_at", "claimant", "incident", "pipeline", "audit_log"],
+  "properties": {
+    "claim_id": {
+      "type": "string",
+      "pattern": "^CLM-\\d{4}-\\d{5}$",
+      "description": "Unique claim identifier in format CLM-YYYY-NNNNN (e.g., CLM-2026-00001)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "FNOL_RECEIVED",
+        "COVERAGE_CHECKED",
+        "ASSESSED",
+        "FRAUD_ANALYZED",
+        "REVIEWED",
+        "PAYMENT_ISSUED",
+        "DENIED",
+        "ESCALATED",
+        "ERROR"
+      ],
+      "description": "Current claim status in the processing pipeline state machine. Transitions: FNOL_RECEIVED -> COVERAGE_CHECKED -> ASSESSED -> FRAUD_ANALYZED -> REVIEWED -> PAYMENT_ISSUED or DENIED. ESCALATED and ERROR can occur from any stage."
+    },
+    "submitted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the claim was first submitted (FNOL received)"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of the most recent update to this claim record"
+    },
+    "claimant": {
+      "type": "object",
+      "description": "Information about the person filing the claim",
+      "required": ["policy_id", "name"],
+      "properties": {
+        "policy_id": {
+          "type": "string",
+          "description": "Policy identifier linking to the mock policy database (e.g., POL-AUT-98765)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Full name of the claimant (policyholder or authorized representative)"
+        },
+        "contact_phone": {
+          "type": ["string", "null"],
+          "description": "Claimant phone number for follow-up communication"
+        },
+        "contact_email": {
+          "type": ["string", "null"],
+          "format": "email",
+          "description": "Claimant email address for written correspondence and status updates"
+        }
+      }
+    },
+    "incident": {
+      "type": "object",
+      "description": "Details of the incident being claimed",
+      "required": ["date", "description", "type"],
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "Date the incident occurred (YYYY-MM-DD)"
+        },
+        "time": {
+          "type": ["string", "null"],
+          "description": "Approximate time of incident (HH:MM format, 24-hour)"
+        },
+        "location": {
+          "type": ["string", "null"],
+          "description": "Location where the incident occurred (address, intersection, or description)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Free-text description of what happened, as reported by the claimant"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["collision", "comprehensive", "liability", "theft", "vandalism", "weather"],
+          "description": "Category of incident: collision (two+ vehicles), comprehensive (non-collision damage), liability (claimant at fault for third-party damage), theft (vehicle stolen), vandalism (intentional damage), weather (hail, flood, tornado)"
+        },
+        "other_party": {
+          "type": ["object", "null"],
+          "description": "Information about the other party involved, if applicable (collision/liability claims)",
+          "properties": {
+            "name": {
+              "type": ["string", "null"],
+              "description": "Name of the other party involved in the incident"
+            },
+            "insurance_company": {
+              "type": ["string", "null"],
+              "description": "Other party's insurance carrier name"
+            },
+            "policy_number": {
+              "type": ["string", "null"],
+              "description": "Other party's insurance policy number"
+            },
+            "contact": {
+              "type": ["string", "null"],
+              "description": "Other party's contact information (phone or email)"
+            }
+          }
+        },
+        "police_report_number": {
+          "type": ["string", "null"],
+          "description": "Police report number if law enforcement responded to the incident"
+        },
+        "photos": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Array of file paths to uploaded photos of damage (relative to shared/uploads/)"
+        },
+        "injuries_reported": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether any injuries were reported in connection with this incident"
+        },
+        "witnesses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Witness full name"
+              },
+              "contact": {
+                "type": ["string", "null"],
+                "description": "Witness contact information (phone or email)"
+              },
+              "statement": {
+                "type": ["string", "null"],
+                "description": "Brief summary of witness statement, if available"
+              }
+            },
+            "required": ["name"]
+          },
+          "description": "Array of witness information for the incident"
+        }
+      }
+    },
+    "pipeline": {
+      "type": "object",
+      "description": "Processing results from each pipeline stage. Each section is written by the corresponding agent and read by downstream agents.",
+      "required": ["front_desk", "claims_officer", "assessor", "fraud_analyst", "senior_reviewer", "finance"],
+      "properties": {
+        "front_desk": {
+          "type": "object",
+          "description": "Stage 1: FNOL intake, categorization, and completeness check. Written by the Front Desk agent.",
+          "properties": {
+            "completed_at": {
+              "type": ["string", "null"],
+              "format": "date-time",
+              "description": "ISO 8601 timestamp when Front Desk completed processing"
+            },
+            "agent_session": {
+              "type": ["string", "null"],
+              "description": "OpenClaw session key for this agent run (for transcript retrieval via sessions_history)"
+            },
+            "category": {
+              "type": ["string", "null"],
+              "description": "Claim category determined during intake (e.g., standard collision, complex multi-vehicle, weather event)"
+            },
+            "priority": {
+              "type": ["string", "null"],
+              "enum": [null, "low", "normal", "high", "urgent"],
+              "description": "Priority level based on severity, injuries, and time sensitivity"
+            },
+            "cat_event": {
+              "type": ["string", "null"],
+              "description": "Catastrophe event identifier if this claim is part of a declared CAT event (e.g., CAT-2026-003-tornado)"
+            },
+            "missing_info": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of information items that are missing or need follow-up from the claimant"
+            }
+          }
+        },
+        "claims_officer": {
+          "type": "object",
+          "description": "Stage 2: Policy lookup, coverage verification, and exclusion check. Written by the Claims Officer agent.",
+          "properties": {
+            "completed_at": {
+              "type": ["string", "null"],
+              "format": "date-time",
+              "description": "ISO 8601 timestamp when Claims Officer completed processing"
+            },
+            "agent_session": {
+              "type": ["string", "null"],
+              "description": "OpenClaw session key for this agent run"
+            },
+            "covered": {
+              "type": ["boolean", "null"],
+              "description": "Whether the claim is covered under the policy (true = covered, false = denied, null = not yet determined)"
+            },
+            "policy_status": {
+              "type": ["string", "null"],
+              "enum": [null, "active", "expired", "cancelled", "suspended"],
+              "description": "Current status of the claimant's policy at time of incident"
+            },
+            "coverage_type": {
+              "type": ["string", "null"],
+              "description": "Applicable coverage type from the policy (e.g., collision, comprehensive, liability, UM/UIM)"
+            },
+            "deductible_amount": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "Deductible amount in USD applicable to this claim based on coverage type"
+            },
+            "coverage_limit": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "Maximum coverage limit in USD for this claim type under the policy"
+            },
+            "exclusions_checked": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of policy exclusions that were reviewed and their applicability (documents due diligence per FCSP Act)"
+            },
+            "denial_reason": {
+              "type": ["string", "null"],
+              "description": "If coverage is denied, the specific reason referencing policy language and applicable exclusion"
+            },
+            "um_uim_route": {
+              "type": ["string", "null"],
+              "enum": [null, "UM", "UIM", "not_applicable"],
+              "description": "Uninsured/Underinsured Motorist routing: UM if other party has no insurance, UIM if other party has insufficient coverage, not_applicable otherwise"
+            }
+          }
+        },
+        "assessor": {
+          "type": "object",
+          "description": "Stage 3: Damage estimation, total loss determination, and repair recommendation. Written by the Assessor agent.",
+          "properties": {
+            "completed_at": {
+              "type": ["string", "null"],
+              "format": "date-time",
+              "description": "ISO 8601 timestamp when Assessor completed processing"
+            },
+            "agent_session": {
+              "type": ["string", "null"],
+              "description": "OpenClaw session key for this agent run"
+            },
+            "repair_estimate_usd": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "Total estimated repair cost in USD (parts + labor + paint + materials)"
+            },
+            "total_loss": {
+              "type": ["boolean", "null"],
+              "description": "Whether the vehicle is a total loss (repair cost exceeds threshold percentage of ACV, typically 70-75% in Ohio)"
+            },
+            "acv_usd": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "Actual Cash Value of the vehicle in USD (market value minus depreciation)"
+            },
+            "salvage_value_usd": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "Estimated salvage value if total loss is declared"
+            },
+            "parts_recommendation": {
+              "type": ["string", "null"],
+              "enum": [null, "OEM", "aftermarket"],
+              "description": "Parts recommendation: OEM for vehicles under 3yr/36K miles or safety-critical repairs, aftermarket otherwise (judgment-based, not hardcoded)"
+            },
+            "labor_hours": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "Estimated labor hours for repair work"
+            },
+            "rental_days": {
+              "type": ["integer", "null"],
+              "minimum": 0,
+              "description": "Estimated number of rental car days needed during repair (if rental coverage applies)"
+            },
+            "pre_existing_damage_flags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of pre-existing damage indicators found during assessment (cross-referenced with fraud analysis)"
+            },
+            "hidden_damage_likely": {
+              "type": ["boolean", "null"],
+              "description": "Whether hidden damage is likely based on impact type and visible damage patterns (may trigger supplement)"
+            }
+          }
+        },
+        "fraud_analyst": {
+          "type": "object",
+          "description": "Stage 4: Fraud risk scoring, pattern matching, and SIU referral recommendation. Written by the Fraud Analyst agent.",
+          "properties": {
+            "completed_at": {
+              "type": ["string", "null"],
+              "format": "date-time",
+              "description": "ISO 8601 timestamp when Fraud Analyst completed processing"
+            },
+            "agent_session": {
+              "type": ["string", "null"],
+              "description": "OpenClaw session key for this agent run"
+            },
+            "risk_score": {
+              "type": ["integer", "null"],
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Fraud risk score from 0 (no indicators) to 100 (multiple converging fraud patterns). Not a probability -- represents indicator convergence strength."
+            },
+            "risk_level": {
+              "type": ["string", "null"],
+              "enum": [null, "low", "medium", "high", "critical"],
+              "description": "Risk level derived from indicator convergence: low (isolated minor flags), medium (multiple flags but no convergence), high (converging indicators), critical (pattern match with known fraud scheme)"
+            },
+            "flags": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["pattern", "description", "severity"],
+                "properties": {
+                  "pattern": {
+                    "type": "string",
+                    "description": "Fraud pattern identifier (e.g., staged_accident, phantom_passenger, inflated_repair, prior_damage, vin_switching)"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Human-readable explanation of why this flag was raised"
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": ["info", "warning", "alert", "critical"],
+                    "description": "Severity of the fraud indicator"
+                  }
+                }
+              },
+              "description": "Array of fraud flags raised during analysis, each with pattern type, explanation, and severity"
+            },
+            "soft_fraud": {
+              "type": ["boolean", "null"],
+              "description": "Whether soft fraud indicators are present (exaggeration/inflation of legitimate claim vs. fabricated claim)"
+            },
+            "recommendation": {
+              "type": ["string", "null"],
+              "enum": [null, "CLEAR", "INVESTIGATE", "REFER_SIU"],
+              "description": "Fraud analyst recommendation: CLEAR (proceed normally), INVESTIGATE (senior reviewer should scrutinize), REFER_SIU (Special Investigations Unit referral required)"
+            }
+          }
+        },
+        "senior_reviewer": {
+          "type": "object",
+          "description": "Stage 5: Final decision authority weighing all prior stages, compliance check, and human escalation trigger. Written by the Senior Reviewer agent.",
+          "properties": {
+            "completed_at": {
+              "type": ["string", "null"],
+              "format": "date-time",
+              "description": "ISO 8601 timestamp when Senior Reviewer completed processing"
+            },
+            "agent_session": {
+              "type": ["string", "null"],
+              "description": "OpenClaw session key for this agent run"
+            },
+            "decision": {
+              "type": ["string", "null"],
+              "enum": [null, "APPROVED", "DENIED", "CONDITIONAL", "ESCALATE_HUMAN"],
+              "description": "Final claim decision: APPROVED (proceed to payment), DENIED (with documented reason), CONDITIONAL (approved with conditions), ESCALATE_HUMAN (requires human adjuster review)"
+            },
+            "decision_reasoning": {
+              "type": ["string", "null"],
+              "description": "Detailed reasoning for the decision, referencing evidence from prior pipeline stages and applicable regulations"
+            },
+            "conditions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of conditions that must be met for a CONDITIONAL approval (e.g., additional documentation, inspection, IME)"
+            },
+            "escalated_to_human": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether this claim has been escalated to a human adjuster for final decision"
+            },
+            "escalation_reason": {
+              "type": ["string", "null"],
+              "description": "Reason for human escalation, if applicable (e.g., high fraud risk, complex coverage question, regulatory concern)"
+            },
+            "fcsp_timeline_check": {
+              "type": ["object", "null"],
+              "description": "Fair Claims Settlement Practices Act timeline compliance verification",
+              "properties": {
+                "acknowledgment_deadline": {
+                  "type": ["string", "null"],
+                  "format": "date",
+                  "description": "Deadline for acknowledgment of claim receipt (typically 15 business days per FCSP)"
+                },
+                "decision_deadline": {
+                  "type": ["string", "null"],
+                  "format": "date",
+                  "description": "Deadline for claim decision communication (typically 30 business days per FCSP)"
+                },
+                "payment_deadline": {
+                  "type": ["string", "null"],
+                  "format": "date",
+                  "description": "Deadline for payment after approval (typically 30 business days per FCSP)"
+                },
+                "compliant": {
+                  "type": ["boolean", "null"],
+                  "description": "Whether current processing timeline is within FCSP Act requirements"
+                }
+              }
+            }
+          }
+        },
+        "finance": {
+          "type": "object",
+          "description": "Stage 6: Payment calculation, deductible application, depreciation, and disbursement record. Written by the Finance agent.",
+          "properties": {
+            "completed_at": {
+              "type": ["string", "null"],
+              "format": "date-time",
+              "description": "ISO 8601 timestamp when Finance completed processing"
+            },
+            "agent_session": {
+              "type": ["string", "null"],
+              "description": "OpenClaw session key for this agent run"
+            },
+            "payment_amount_usd": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "Final payment amount in USD after all deductions (repair estimate or ACV minus deductible minus depreciation)"
+            },
+            "deductible_applied_usd": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "Deductible amount deducted from the claim payment in USD"
+            },
+            "depreciation_applied_usd": {
+              "type": ["number", "null"],
+              "minimum": 0,
+              "description": "Depreciation amount deducted from parts or vehicle value in USD"
+            },
+            "subrogation_candidate": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether this claim is a subrogation candidate (other party at fault, recovery possible from other party's insurer)"
+            },
+            "subrogation_target": {
+              "type": ["string", "null"],
+              "description": "Target for subrogation recovery (other party's insurance company name and policy number)"
+            },
+            "payment_method": {
+              "type": ["string", "null"],
+              "enum": [null, "direct_deposit", "check", "repair_shop_direct"],
+              "description": "Method of payment disbursement"
+            },
+            "payment_reference": {
+              "type": ["string", "null"],
+              "description": "Payment transaction reference number (mock for hackathon)"
+            },
+            "supplement_eligible": {
+              "type": ["boolean", "null"],
+              "description": "Whether this claim is eligible for supplemental payment if hidden damage is discovered during repair"
+            }
+          }
+        }
+      }
+    },
+    "audit_log": {
+      "type": "array",
+      "description": "Append-only audit trail of every agent action and decision. Required for FCSP Act compliance and demonstration of transparent AI decision-making.",
+      "items": {
+        "type": "object",
+        "required": ["timestamp", "agent", "action", "reasoning"],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of this audit entry"
+          },
+          "agent": {
+            "type": "string",
+            "description": "Agent ID that performed this action (router, front-desk, claims-officer, assessor, fraud-analyst, senior-reviewer, finance)"
+          },
+          "action": {
+            "type": "string",
+            "description": "Action taken (e.g., claim_registered, intake_completed, coverage_verified, coverage_denied, estimate_completed, fraud_flags_raised, decision_approved, payment_issued, escalated_to_human)"
+          },
+          "reasoning": {
+            "type": "string",
+            "description": "The agent's actual reasoning for this action -- not a code, but a human-readable explanation of why this decision was made"
+          },
+          "regulation_reference": {
+            "type": ["string", "null"],
+            "description": "Reference to applicable regulation or policy if this action has regulatory implications (e.g., FCSP Act Section 2695.7(b), Ohio Rev. Code 3937.18)"
+          }
+        }
+      }
+    }
+  }
+}

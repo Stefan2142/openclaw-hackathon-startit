@@ -1,0 +1,50 @@
+{
+  "policy_id": "POL-AUT-10004",
+  "policyholder": {
+    "name": "Sarah Brown",
+    "contact_phone": "555-456-7890",
+    "contact_email": "sarah.brown@example.com",
+    "address": {
+      "street": "721 Pine Road",
+      "city": "Dayton",
+      "state": "OH",
+      "zip": "45402"
+    }
+  },
+  "effective_date": "2025-03-01",
+  "expiration_date": "2026-03-01",
+  "status": "active",
+  "coverages": [
+    {
+      "type": "collision",
+      "limit": null,
+      "deductible": 2000,
+      "per_person_limit": null,
+      "per_occurrence_limit": null
+    },
+    {
+      "type": "comprehensive",
+      "limit": null,
+      "deductible": 1000,
+      "per_person_limit": null,
+      "per_occurrence_limit": null
+    },
+    {
+      "type": "liability",
+      "limit": null,
+      "deductible": 0,
+      "per_person_limit": 50000,
+      "per_occurrence_limit": 100000
+    }
+  ],
+  "excluded_drivers": [],
+  "vehicles": [
+    {
+      "year": 2019,
+      "make": "Nissan",
+      "model": "Altima",
+      "vin": "1N4BL4BV0KC000567"
+    }
+  ],
+  "endorsements": []
+}

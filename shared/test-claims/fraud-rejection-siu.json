@@ -1,0 +1,107 @@
+{
+  "claim_id": "CLM-2026-00002",
+  "status": "FNOL_RECEIVED",
+  "submitted_at": "2026-02-21T11:00:00Z",
+  "updated_at": "2026-02-21T11:00:00Z",
+  "claimant": {
+    "policy_id": "POL-AUT-10001",
+    "name": "John Smith",
+    "contact_phone": "555-234-5678",
+    "contact_email": "john.smith@example.com"
+  },
+  "incident": {
+    "date": "2026-02-18",
+    "time": "17:45",
+    "location": "Parking lot exit at Eastland Mall, 2740 S Hamilton Rd, Columbus, OH",
+    "description": "I was stopped at the exit of the Eastland Mall parking lot waiting to turn right onto Hamilton Road. Traffic was heavy due to the evening rush. A white Toyota Camry behind me rolled forward and struck the rear of my vehicle at low speed, maybe 5 to 10 mph. The impact felt like a firm bump but nothing extreme. I had four passengers in my car -- my friends Marcus Williams, Terrell Jackson, Devon Harris, and Anthony Brown. We were heading to a restaurant for dinner. After the collision, all four of my passengers started experiencing neck and back pain. Marcus said his shoulder was hurting too. We all went to the MedFirst Urgent Care clinic on East Broad Street that evening to get checked out. The doctor said we all had soft tissue injuries and whiplash symptoms. My passengers and I have retained Attorney Lawrence Mitchell at Mitchell & Associates to represent us regarding our injuries. I spoke with Marcus and Terrell and they confirmed they are also working with Attorney Mitchell since he was recommended by a friend. The other driver apologized and said he was looking at his phone when his foot slipped off the brake. A police officer came about 25 minutes later and took a report. My friends Dwayne Cooper and Rashid Thompson were in the car behind me and saw the whole thing happen. The damage to my rear bumper looks like some scuffing and a small crack in the bumper cover. The other driver's car had a small dent on the front bumper. I also had a similar incident about 8 months ago at a different parking lot where someone backed into my car, but that claim was for property damage only.",
+    "type": "collision",
+    "other_party": {
+      "name": "Kevin Park",
+      "insurance_company": "Progressive",
+      "policy_number": "PGR-44-2198765",
+      "contact": "555-432-1098"
+    },
+    "police_report_number": "CPD-2026-017865",
+    "photos": [],
+    "injuries_reported": true,
+    "witnesses": [
+      {
+        "name": "Dwayne Cooper",
+        "contact": "555-678-2345",
+        "statement": "I was in the car directly behind the Toyota. I saw the Toyota roll into the back of the Honda. It was a very low speed impact. After the collision everyone in the Honda got out saying they were hurt."
+      },
+      {
+        "name": "Rashid Thompson",
+        "contact": "555-678-3456",
+        "statement": "I was a passenger in Dwayne's car. We were right behind the Toyota when it bumped into the Honda ahead of it. It was barely a tap. Then all the people in the Honda started complaining about injuries."
+      }
+    ]
+  },
+  "pipeline": {
+    "front_desk": {
+      "completed_at": null,
+      "agent_session": null,
+      "category": null,
+      "priority": null,
+      "cat_event": null,
+      "missing_info": []
+    },
+    "claims_officer": {
+      "completed_at": null,
+      "agent_session": null,
+      "covered": null,
+      "policy_status": null,
+      "coverage_type": null,
+      "deductible_amount": null,
+      "coverage_limit": null,
+      "exclusions_checked": [],
+      "denial_reason": null,
+      "um_uim_route": null
+    },
+    "assessor": {
+      "completed_at": null,
+      "agent_session": null,
+      "repair_estimate_usd": null,
+      "total_loss": null,
+      "acv_usd": null,
+      "salvage_value_usd": null,
+      "parts_recommendation": null,
+      "labor_hours": null,
+      "rental_days": null,
+      "pre_existing_damage_flags": [],
+      "hidden_damage_likely": null
+    },
+    "fraud_analyst": {
+      "completed_at": null,
+      "agent_session": null,
+      "risk_score": null,
+      "risk_level": null,
+      "flags": [],
+      "soft_fraud": null,
+      "recommendation": null
+    },
+    "senior_reviewer": {
+      "completed_at": null,
+      "agent_session": null,
+      "decision": null,
+      "decision_reasoning": null,
+      "conditions": [],
+      "escalated_to_human": false,
+      "escalation_reason": null,
+      "fcsp_timeline_check": null
+    },
+    "finance": {
+      "completed_at": null,
+      "agent_session": null,
+      "payment_amount_usd": null,
+      "deductible_applied_usd": null,
+      "depreciation_applied_usd": null,
+      "subrogation_candidate": false,
+      "subrogation_target": null,
+      "payment_method": null,
+      "payment_reference": null,
+      "supplement_eligible": null
+    }
+  },
+  "audit_log": []
+}
